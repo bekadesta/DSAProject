@@ -14,11 +14,11 @@ class Block:
 class Blockchain:
     def __init__(self):
         self.chain = []
-        self.transaction_pool = []  # Transaction pool
-        self.create_block(data="Genesis Block", previous_hash='-1')  # Genesis block with previous hash as -1
+        self.transaction_pool = []
+        self.create_block(data="Genesis Block", previous_hash='-1')
 
     def create_block(self, data, previous_hash=None):
-        index = len(self.chain)  # Start index from 0
+        index = len(self.chain)
         timestamp = time.time()
         hash = self.hash_block(index, previous_hash, timestamp, data)
         block = Block(index, previous_hash, timestamp, data, hash)
@@ -30,7 +30,6 @@ class Blockchain:
         return hashlib.sha256(value).hexdigest()
 
     def display_chain(self):
-        # Create a formatted string for the blockchain
         blockchain_str = f"{'Index':<6} | {'Previous Hash':<66} | {'Timestamp':<25} | {'Data':<40} | {'Hash'}\n"
         blockchain_str += "-" * 200 + "\n"
 
@@ -40,7 +39,7 @@ class Blockchain:
         return blockchain_str
 
     def add_transaction(self, data):
-        self.transaction_pool.append(data)  # Add transaction to the pool
+        self.transaction_pool.append(data)
 
     def display_transaction_pool(self):
         return "\n".join(self.transaction_pool) if self.transaction_pool else "No transactions in the pool."
@@ -87,29 +86,26 @@ class BlockchainApp:
                                      fg="white")
         self.view_button.pack(pady=10)
 
-        # Output area for blockchain
         self.output_area = scrolledtext.ScrolledText(root, width=120, height=15, font=("Courier New", 10))
         self.output_area.pack(pady=10)
 
-        # Output area for transaction pool
         self.transaction_area = scrolledtext.ScrolledText(root, width=120, height=10, font=("Courier New", 10))
         self.transaction_area.pack(pady=10)
 
-        # Bind the Enter key to the add_transaction method
         self.data_entry.bind("<Return>", self.add_transaction_with_enter)
 
     def add_transaction(self):
         data = self.data_entry.get()
         if data:
-            self.blockchain.add_transaction(data)  # Add transaction to the pool
+            self.blockchain.add_transaction(data)
             messagebox.showinfo("Success", "Transaction added successfully!")
-            self.data_entry.delete(0, tk.END)  # Clear the entry field
-            self.update_transaction_area()  # Update the transaction pool display
+            self.data_entry.delete(0, tk.END)
+            self.update_transaction_area()
         else:
             messagebox.showwarning("Input Error", "Please enter some data.")
 
     def add_transaction_with_enter(self, event):
-        self.add_transaction()  # Call the add_transaction method when Enter is pressed
+        self.add_transaction()
 
     def add_block(self):
         if not self.blockchain.transaction_pool:
@@ -117,21 +113,21 @@ class BlockchainApp:
             return
 
         previous_hash = self.blockchain.chain[-1].hash if self.blockchain.chain else '-1'
-        data = ', '.join(self.blockchain.transaction_pool)  # Combine all transactions into one block
+        data = ', '.join(self.blockchain.transaction_pool)
         self.blockchain.create_block(data, previous_hash)
         messagebox.showinfo("Success", "Block added successfully!")
-        self.blockchain.transaction_pool.clear()  # Clear the transaction pool after adding the block
-        self.update_transaction_area()  # Update the transaction pool display
+        self.blockchain.transaction_pool.clear()
+        self.update_transaction_area()
 
     def view_blockchain(self):
         blockchain_str = self.blockchain.display_chain()
-        self.output_area.delete(1.0, tk.END)  # Clear the output area
-        self.output_area.insert(tk.END, blockchain_str)  # Display the blockchain
+        self.output_area.delete(1.0, tk.END)
+        self.output_area.insert(tk.END, blockchain_str)
 
     def update_transaction_area(self):
-        self.transaction_area.delete(1.0, tk.END)  # Clear the transaction area
+        self.transaction_area.delete(1.0, tk.END)
         transactions_str = "Current Transactions in Pool:\n" + self.blockchain.display_transaction_pool()
-        self.transaction_area.insert(tk.END, transactions_str)  # Display current transactions
+        self.transaction_area.insert(tk.END, transactions_str)
 
 if __name__ == "__main__":
     root = tk.Tk()
