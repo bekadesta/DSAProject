@@ -48,7 +48,7 @@ class BlockchainApp:
     def __init__(self, root):
         self.blockchain = Blockchain()
         self.root = root
-        self.root.title("Simple Blockchain with Transaction Pool")
+        self.root.title("Simple Blockchain")
         self.root.geometry("1100x700")  # Set window size
         self.root.configure(bg="#f0f0f0")  # Set background color
 
